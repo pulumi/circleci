@@ -3,7 +3,7 @@ version: 2.1
 # Going super-meta, we build/validate the orbs in this CircleCI config,
 # and we also use a dev build to test it.
 orbs:
-  pulumi: pulumi/pulumi@dev:0.0.12
+  pulumi: pulumi/pulumi@1.0.0
 
 workflows:
   version: 2
