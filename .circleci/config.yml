@@ -55,6 +55,9 @@ jobs:
     steps:
       - checkout
       - pulumi/login
+      - run:
+          name: Install NPM packages
+          command: cd ./tests && npm install
       - pulumi/preview:
           stack: pulumi-orbs-alpha
           working_directory: ./tests
