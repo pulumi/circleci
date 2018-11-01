@@ -1,0 +1,2 @@
+config:
+  pulumi-orbs-test:message: Hello, CircleCI (stack beta)

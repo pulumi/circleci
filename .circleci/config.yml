@@ -9,9 +9,9 @@ workflows:
   version: 2
   test-orb:
     jobs:
-      # Commented out to speed up dev cycle.
-      # - validate-orbs
-      # - test-login
+      - validate-orbs
+      - test-login
+      - test-preview
       - test-update
 
 commands:
@@ -48,6 +48,20 @@ jobs:
       - run:
           command: pulumi version
 
+  test-preview:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo/
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          name: Install NPM packages
+          command: cd ./tests && npm install
+      - pulumi/preview:
+          stack: pulumi-orbs-alpha
+          working_directory: ./tests
+
   test-update:
     docker:
       - image: circleci/node:10
@@ -59,6 +73,6 @@ jobs:
           name: Install NPM packages
           command: cd ./tests && npm install
       - pulumi/update:
-          stack: pulumi-orbs-alpha
+          stack: pulumi-orbs-beta
           skip-preview: true
           working_directory: ./tests
