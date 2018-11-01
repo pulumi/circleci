@@ -55,8 +55,13 @@ commands:
       stack:
         type: string
         description: "Name of the Pulumi stack to preview."
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
     steps:
-      - run: pulumi preview --stack << parameters.stack >>
+      - run: pulumi preview --stack << parameters.stack >> --cwd << parameters.working_directory >>
 
   # update command
   update:
@@ -64,8 +69,13 @@ commands:
       stack:
         type: string
         description: "Name of the Pulumi stack to update."
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
     steps:
-      - run: pulumi update --stack << parameters.stack >>
+      - run: pulumi update --stack << parameters.stack >> --cwd << parameters.working_directory >>
 
 # TODO: Add a few more commands and parameters.
 # - preview.message

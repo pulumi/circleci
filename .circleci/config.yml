@@ -3,7 +3,7 @@ version: 2.1
 # Going super-meta, we build/validate the orbs in this CircleCI config,
 # and we also use a dev build to test it.
 orbs:
-  pulumi: pulumi/pulumi@dev:0.0.8
+  pulumi: pulumi/pulumi@dev:0.0.9
 
 workflows:
   version: 2
@@ -51,18 +51,10 @@ jobs:
   test-update:
     docker:
       - image: circleci/node:10
-    working_directory: ~/repo/tests/
+    working_directory: ~/repo/
     steps:
       - checkout
       - pulumi/login
-      - run:
-          command: ls
-          working_directory: ~/
-      - run:
-          command: ls
-          working_directory: ~/repo/
-      - run:
-          command: ls
-          working_directory: ~/repo/tests/
       - pulumi/preview:
           stack: pulumi-orbs-alpha
+          working_directory: ./tests
