@@ -42,7 +42,7 @@ commands:
           command: |
             # TODO: Is it possible to avoid this?
             PULUMI_ACCESS_TOKEN=`echo << parameters.access-token >>`
-            pulumi login --cloud-url << parameters.cloud-url >> --logtostderr -v=9
+            pulumi login --cloud-url << parameters.cloud-url >>
           # TODO: The value in the environment map won't expand any environment variables,
           # so the default value of $PULUMI_ACCESS_TOKEN will be the literal string
           # "$PULUMI_ACCESS_TOKEN" instead of the env var. Is it possible to escape it?
@@ -55,8 +55,15 @@ commands:
       stack:
         type: string
         description: "Name of the Pulumi stack to preview."
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
     steps:
-      - run: pulumi preview --stack << parameters.stack >>
+      - run:
+          name: "pulumi preview --stack << parameters.stack >>"
+          command: pulumi preview --stack << parameters.stack >> --cwd << parameters.working_directory >>
 
   # update command
   update:
@@ -64,28 +71,19 @@ commands:
       stack:
         type: string
         description: "Name of the Pulumi stack to update."
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
+      skip-preview:
+        type: boolean
+        description: "Do not perform a preview before performing the update."
+        default: false
     steps:
-      - run: pulumi update --stack << parameters.stack >>
-
-# TODO: Add a few more commands and parameters.
-# - preview.message
-# - update.message
-# - update.skip-preview
-# - refresh.{message, skip-preview, expect-no-changes}
+      - run: 
+          name: "pulumi update --stack << parameters.stack >>"
+          command: pulumi update --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
   
-# TODO: Add examples markup, and tests for validation.
+# TODO: Add examples markup.
 # https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/usage-examples.md
-
-# TODO: Tests for validation.
-# - login
-#  - explicit access token
-#  - use PULUMI_ACCESS_TOKEN default
-#  - cloud-url and version set
-# - use default CWD or pass working_directory to steps
-# - preview.message
-# - update.message, skip-preview
-# - refresh.expect-no-changes
-
-# TODO: Document all of the orbs in the README.md file.
-
-# TODO: Build, validate, test orbs via CircleCI.
