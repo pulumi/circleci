@@ -1,0 +1,4 @@
+name: pulumi-orbs-test
+runtime: nodejs
+description: Noop Pulumi program for testing preview and update.
+

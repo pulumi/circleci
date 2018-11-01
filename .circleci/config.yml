@@ -9,8 +9,10 @@ workflows:
   version: 2
   test-orb:
     jobs:
-      - validate-orbs
-      - test-login
+      # Commented out to speed up dev cycle.
+      # - validate-orbs
+      # - test-login
+      - test-update
 
 commands:
   install-circleci:
@@ -45,3 +47,18 @@ jobs:
           version: 0.16.1
       - run:
           command: pulumi version
+
+  test-update:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo/tests
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          command: ls
+      - run:
+          command: ls
+          working_directory: ~/repo/
+      - pulumi/preview:
+          stack: pulumi-orbs-alpha

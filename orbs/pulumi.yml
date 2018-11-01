@@ -42,7 +42,7 @@ commands:
           command: |
             # TODO: Is it possible to avoid this?
             PULUMI_ACCESS_TOKEN=`echo << parameters.access-token >>`
-            pulumi login --cloud-url << parameters.cloud-url >> --logtostderr -v=9
+            pulumi login --cloud-url << parameters.cloud-url >>
           # TODO: The value in the environment map won't expand any environment variables,
           # so the default value of $PULUMI_ACCESS_TOKEN will be the literal string
           # "$PULUMI_ACCESS_TOKEN" instead of the env var. Is it possible to escape it?
@@ -77,10 +77,6 @@ commands:
 # https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/usage-examples.md
 
 # TODO: Tests for validation.
-# - login
-#  - explicit access token
-#  - use PULUMI_ACCESS_TOKEN default
-#  - cloud-url and version set
 # - use default CWD or pass working_directory to steps
 # - preview.message
 # - update.message, skip-preview
