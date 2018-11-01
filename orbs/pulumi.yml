@@ -1,0 +1,91 @@
+version: 2.1
+
+description:
+    "Pulumi: Cloud Native Infrastructure as Code
+
+    Create, deploy, and manage cloud native applications and infrastructure
+    in your favorite language, using an open source platform that enables
+    sharing, reuse, and safe and predictable changes in a team environment.
+    
+    The Pulumi Orbs for CircleCI enables you to use easily integrate Pulumi
+    into your CircleCI workflows."
+
+commands:
+
+  # login command
+  login:
+    parameters:
+      version:
+        type: string
+        description: "Version of the Pulumi CLI to install."
+        default: 0.16.2
+      cloud-url:
+        type: string
+        description: "URL of the Pulumi service to log into."
+        default: https://api.pulumi.com
+      access-token:
+        type: string
+        description:
+          "The access token to use, defaulting to `$PULUMI_ACCESS_TOKEN` so you can
+          set the environment variable and not need to declare a value in config."
+        default: "${PULUMI_ACCESS_TOKEN}"
+    steps:
+      - run: 
+          name: "Install Pulumi CLI, if needed"
+          command: |
+              curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
+              # Add to PATH
+              echo 'export PATH=/home/circleci/.pulumi/bin:$PATH' >> $BASH_ENV
+              source $BASH_ENV
+      - run:
+          name: "Log into Pulumi"
+          command: |
+            # TODO: Is it possible to avoid this?
+            PULUMI_ACCESS_TOKEN=`echo << parameters.access-token >>`
+            pulumi login --cloud-url << parameters.cloud-url >> --logtostderr -v=9
+          # TODO: The value in the environment map won't expand any environment variables,
+          # so the default value of $PULUMI_ACCESS_TOKEN will be the literal string
+          # "$PULUMI_ACCESS_TOKEN" instead of the env var. Is it possible to escape it?
+          # environment:
+          #   PULUMI_ACCESS_TOKEN: << parameters.access-token >>
+
+  # preview command
+  preview:
+    parameters:
+      stack:
+        type: string
+        description: "Name of the Pulumi stack to preview."
+    steps:
+      - run: pulumi preview --stack << parameters.stack >>
+
+  # update command
+  update:
+    parameters:
+      stack:
+        type: string
+        description: "Name of the Pulumi stack to update."
+    steps:
+      - run: pulumi update --stack << parameters.stack >>
+
+# TODO: Add a few more commands and parameters.
+# - preview.message
+# - update.message
+# - update.skip-preview
+# - refresh.{message, skip-preview, expect-no-changes}
+  
+# TODO: Add examples markup, and tests for validation.
+# https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/usage-examples.md
+
+# TODO: Tests for validation.
+# - login
+#  - explicit access token
+#  - use PULUMI_ACCESS_TOKEN default
+#  - cloud-url and version set
+# - use default CWD or pass working_directory to steps
+# - preview.message
+# - update.message, skip-preview
+# - refresh.expect-no-changes
+
+# TODO: Document all of the orbs in the README.md file.
+
+# TODO: Build, validate, test orbs via CircleCI.
