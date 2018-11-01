@@ -17,8 +17,9 @@ commands:
     parameters:
       version:
         type: string
-        description: "Version of the Pulumi CLI to install."
-        default: 0.16.2
+        description:
+          "Version of the Pulumi CLI to install. Defaults to the latest version."
+        default: latest
       cloud-url:
         type: string
         description: "URL of the Pulumi service to log into."
@@ -33,21 +34,19 @@ commands:
       - run: 
           name: "Install Pulumi CLI, if needed"
           command: |
-              curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
+              if [ << parameters.version >> == "latest" ]; then
+                curl -L https://get.pulumi.com/ | bash -s
+              else
+                curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
+              fi
               # Add to PATH
               echo 'export PATH=/home/circleci/.pulumi/bin:$PATH' >> $BASH_ENV
               source $BASH_ENV
       - run:
           name: "Log into Pulumi"
           command: |
-            # TODO: Is it possible to avoid this?
-            PULUMI_ACCESS_TOKEN=`echo << parameters.access-token >>`
+            export PULUMI_ACCESS_TOKEN="<< parameters.access-token >>"
             pulumi login --cloud-url << parameters.cloud-url >>
-          # TODO: The value in the environment map won't expand any environment variables,
-          # so the default value of $PULUMI_ACCESS_TOKEN will be the literal string
-          # "$PULUMI_ACCESS_TOKEN" instead of the env var. Is it possible to escape it?
-          # environment:
-          #   PULUMI_ACCESS_TOKEN: << parameters.access-token >>
 
   # preview command
   preview:
@@ -85,5 +84,41 @@ commands:
           name: "pulumi update --stack << parameters.stack >>"
           command: pulumi update --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
   
-# TODO: Add examples markup.
-# https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/usage-examples.md
+examples:
+  login_example:
+    description:
+        "Using the pulumi/login orb, specifying a specific version of the CLI to install and
+        a value other than ${PULUMI_ACCESS_TOKEN} to use for the access token."
+    usage:
+      version: 2.1
+      orbs:
+        pulumi: pulumi/pulumi@1.0.0
+      jobs:
+        build:
+          docker:
+            - image: circleci/node:10
+          working_directory: ~/repo/
+          steps:
+            - pulumi/login:
+                version: "16.0.2"
+                access-token: ${OTHER_ACCESS_TOKEN}
+
+  update_example:
+    description:
+        "Runs `pulumi update` for a stack. The `working_directory` parameter can be used
+        if the Pulumi.yaml file is not in the current working directory."
+    usage:
+      version: 2.1
+      orbs:
+        pulumi: pulumi/pulumi@1.0.0
+      jobs:
+        build:
+          docker:
+            - image: circleci/node:10
+          working_directory: ~/repo/
+          steps:
+            - checkout
+            - pulumi/login
+            - pulumi/update:
+                stack: robot-co/website-prod
+                working_directory: ~/repo/src/website/
