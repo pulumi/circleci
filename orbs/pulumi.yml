@@ -74,8 +74,14 @@ commands:
         description:
             "The relative working directory to use, i.e. where your Pulumi.yaml is located."
         default: "."
+      skip-preview:
+        type: boolean
+        description: "Do not perform a preview before performing the update."
+        default: false
     steps:
-      - run: pulumi update --stack << parameters.stack >> --cwd << parameters.working_directory >>
+      - run: 
+          name: "pulumi update --stack << parameters.stack >>"
+          command: pulumi update --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
 # TODO: Add a few more commands and parameters.
 # - preview.message
