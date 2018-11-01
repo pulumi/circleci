@@ -1,16 +1,23 @@
 version: 2.1
 
+# Going super-meta, we build/validate the orbs in this CircleCI config,
+# and we also use a dev build to test it.
+orbs:
+  pulumi: pulumi/pulumi@dev:0.0.8
+
 workflows:
   version: 2
   test-orb:
     jobs:
       - validate-orbs
+      - test-login
 
 commands:
   install-circleci:
     description: Installs the CircleCI CLI.
     steps:
       - run: 
+          name: "Installing CircleCI CLI"
           command: |
             curl https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh --fail --show-error | sudo bash
             circleci version
@@ -27,3 +34,14 @@ jobs:
           name: Validate Pulumi orbs
           command: |
             circleci orb validate ./orbs/pulumi.yml
+
+  test-login:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - pulumi/login:
+          version: 0.16.1
+      - run:
+          command: pulumi version
