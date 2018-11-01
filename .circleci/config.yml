@@ -1,0 +1,29 @@
+version: 2.1
+
+workflows:
+  version: 2
+  test-orb:
+    jobs:
+      - validate-orbs
+
+commands:
+  install-circleci:
+    description: Installs the CircleCI CLI.
+    steps:
+      - run: 
+          command: |
+            curl https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh --fail --show-error | sudo bash
+            circleci version
+
+jobs:
+  validate-orbs:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - install-circleci
+      - run:
+          name: Validate Pulumi orbs
+          command: |
+            circleci orb validate ./orbs/pulumi.yml
