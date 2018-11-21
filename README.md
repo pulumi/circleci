@@ -57,7 +57,7 @@ CircleCI job's current working directory, you will need to set the `working_dire
 parameter.
 
 > It is recommended to always run a preview in your CI/CD, as it will catch
-> certainalong classes of errors that wouldn't otherwise be found in a standard
+> certain classes of errors that wouldn't otherwise be found in a standard
 > build, test, lint setup.
 
 | Parameter         | type    | default     | description    |
