@@ -40,7 +40,7 @@ commands:
                 curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
               fi
               # Add to PATH
-              echo 'export PATH=/home/circleci/.pulumi/bin:$PATH' >> $BASH_ENV
+              echo 'export PATH=${HOME}/.pulumi/bin:$PATH' >> $BASH_ENV
               source $BASH_ENV
       - run:
           name: "Log into Pulumi"
