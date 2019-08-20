@@ -8,7 +8,9 @@ description:
     sharing, reuse, and safe and predictable changes in a team environment.
     
     The Pulumi Orbs for CircleCI enables you to use easily integrate Pulumi
-    into your CircleCI workflows."
+    into your CircleCI workflows.
+    
+    Repo: https://circleci.com/orbs/registry/orb/pulumi/pulumi"
 
 commands:
 
