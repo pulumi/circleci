@@ -41,9 +41,24 @@ commands:
               else
                 curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
               fi
-              # Add to PATH
-              echo 'export PATH=${HOME}/.pulumi/bin:$PATH' >> $BASH_ENV
-              source $BASH_ENV
+      - run:
+          name: Install aws-iam-authenticator
+          command: |
+            curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+            chmod +x ./aws-iam-authenticator
+            mv ./aws-iam-authenticator ${HOME}/.pulumi/bin
+      - run: 
+          name: Install kubectl
+          command: |
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            sudo mv ./kubectl ${HOME}/.pulumi/bin
+            # Add to PATH
+            echo 'export PATH=${HOME}/.pulumi/bin:$PATH' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: npm install
+          command: npm install
       - run:
           name: "Log into Pulumi"
           command: |
