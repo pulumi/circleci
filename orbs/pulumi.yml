@@ -50,6 +50,46 @@ commands:
             export PULUMI_ACCESS_TOKEN="<< parameters.access-token >>"
             pulumi login --cloud-url << parameters.cloud-url >>
 
+  # stack init command
+  stack_init:
+    parameters:
+      stack:
+        type: string
+        description: "Name of the stack to initialize."
+      secrets_provider:
+        type: string
+        description: "The type of the provider that should be used to encrypt and decrypt secrets (possible choices: default, passphrase, awskms, azurekeyvault, gcpkms, hashivault) (default "default")."
+        default: "default"
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
+    steps:
+      - run:
+          name: "pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >>"
+          command: pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >>
+
+  # stack rm command
+  stack_rm:
+    parameters:
+      stack:
+        type: string
+        description: "Name of the stack to remove."
+      force:
+        type: boolean
+        description: "Forces deletion of the stack, leaving behind any resources managed by the stack."
+        default: false
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
+    steps:
+      - run:
+          name: "pulumi stack rm << parameters.stack >>"
+          command: pulumi stack rm << parameters.stack >> <<# parameters.force >>--force<</ parameters.force >> --cwd << parameters.working_directory >>
+
   # preview command
   preview:
     parameters:

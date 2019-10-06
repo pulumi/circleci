@@ -48,13 +48,33 @@ service.
 | cloud-url         | string  | https://api.pulumi.com | URL of the Pulumi service to log into. |
 | access-token      | string  | ${PULUMI_ACCESS_TOKEN} | The access token to use to log in. |
 
-### pulumi/preview
+### pulumi/stack_init
 
-The `preview` orb performs a preview of the update to a given Pulumi stack.
+The `stack_init` orb initializes a new Pulumi stack.
 
 If the `Pulumi.yaml` file for your stack is in a different directory than the
 CircleCI job's current working directory, you will need to set the `working_directory`
 parameter.
+
+| Parameter         | type    | default     | description    |
+|-------------------|---------|-------------|----------------|
+| stack           | string  | (none)      | Name of the stack to initialize. |
+| secrets_provider | string  | default      | The type of the provider that should be used to encrypt and decrypt secrets (possible choices: default, passphrase, awskms, azurekeyvault, gcpkms, hashivault). |
+| working_directory | string | . | The relative working directory to run `pulumi` from. | 
+
+### pulumi/stack_rm
+
+The `stack_rm` orb removes a stack and its configuration..
+
+| Parameter         | type    | default     | description    |
+|-------------------|---------|-------------|----------------|
+| stack           | string  | (none)      | Name of the stack to remove. |
+| force | boolean | false | Whether or not to force deletion of the stack, leaving behind any resources managed by the stack. | 
+| working_directory | string | . | The relative working directory to run `pulumi` from. | 
+
+### pulumi/preview
+
+The `preview` orb performs a preview of the update to a given Pulumi stack.
 
 > It is recommended to always run a preview in your CI/CD, as it will catch
 > certain classes of errors that wouldn't otherwise be found in a standard
