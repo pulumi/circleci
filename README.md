@@ -11,7 +11,7 @@ To use these orbs, simply include the `pulumi/pulumi@1.0.0` orbs package, and
 then call the orb commands like `pulumi/login` or `pulumi/update` from your
 CircleCI configuration file.
 
-```
+```yaml
 version: 2.1
 orbs:
   pulumi: pulumi/pulumi@1.0.0
