@@ -58,7 +58,7 @@ commands:
         description: "Name of the stack to initialize."
       secrets_provider:
         type: string
-        description: "The type of the provider that should be used to encrypt and decrypt secrets (possible choices: default, passphrase, awskms, azurekeyvault, gcpkms, hashivault) (default "default")."
+        description: "The type of the provider that should be used to encrypt and decrypt secrets (possible choices: default, passphrase, awskms, azurekeyvault, gcpkms, hashivault) (default 'default')."
         default: "default"
       working_directory:
         type: string
