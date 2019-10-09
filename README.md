@@ -94,3 +94,23 @@ The `update` orb performs an update to a given Pulumi stack.
 | stack           | string  | (none)      | Name of the Pulumi stack to update. |
 | working_directory | string | . | The relative working directory to run `pulumi` from. | 
 | skip-preview | boolean | false | Whether or not to skip the preview step before the update. | 
+
+### pulumi/destroy
+
+The `destroy` orb destroys a given Pulumi stack.
+
+| Parameter         | type    | default     | description    |
+|-------------------|---------|-------------|----------------|
+| stack           | string  | (none)      | Name of the Pulumi stack to destroy. |
+| working_directory | string | . | The relative working directory to run `pulumi` from. | 
+| skip-preview | boolean | false | Whether or not to skip the preview step before destroying the stack. | 
+
+### pulumi/refresh
+
+The `refresh` orb performs a refresh to a given Pulumi stack.
+
+| Parameter         | type    | default     | description    |
+|-------------------|---------|-------------|----------------|
+| stack           | string  | (none)      | Name of the Pulumi stack to refresh. |
+| working_directory | string | . | The relative working directory to run `pulumi` from. | 
+| skip-preview | boolean | false | Whether or not to skip the preview step before the refresh. | 
