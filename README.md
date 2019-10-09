@@ -1,6 +1,6 @@
 # Pulumi Orbs for CircleCI
 
-This repo contains Pulumi Orbs for use in CircleCI. Using these orbs
+This repository contains Pulumi Orbs for use in CircleCI. Using these orbs
 will allow you to easily integrate stack updates and previews into
 your existing CI/CD workflow, without the need for writing custom
 scripts.
