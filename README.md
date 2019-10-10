@@ -97,7 +97,9 @@ The `update` orb performs an update to a given Pulumi stack.
 
 ### pulumi/destroy
 
-The `destroy` orb destroys a given Pulumi stack.
+The `destroy` orb destroys a given Pulumi stack and its resources. After running to completion, all of this stack’s resources and associated state will be gone.
+
+Warning: this command is generally irreversible and should be used with great care.
 
 | Parameter         | type    | default     | description    |
 |-------------------|---------|-------------|----------------|
@@ -107,10 +109,11 @@ The `destroy` orb destroys a given Pulumi stack.
 
 ### pulumi/refresh
 
-The `refresh` orb performs a refresh to a given Pulumi stack.
+The `refresh` orb performs a refresh to a given Pulumi stack. The stack’s resource state is compared to the current state known in the cloud provider, and the stack's resources are updated as necessary. No changes will be made to the resources on the cloud provider, but resources that can no longer be found will be removed from the stack.
 
 | Parameter         | type    | default     | description    |
 |-------------------|---------|-------------|----------------|
 | stack           | string  | (none)      | Name of the Pulumi stack to refresh. |
+| expect_no_changes | boolean | false | If set, Pulumi will report an error if any resource changes are detected. | 
 | working_directory | string | . | The relative working directory to run `pulumi` from. | 
 | skip-preview | boolean | false | Whether or not to skip the preview step before the refresh. | 
