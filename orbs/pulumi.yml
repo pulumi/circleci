@@ -90,6 +90,34 @@ commands:
           name: "pulumi stack rm << parameters.stack >>"
           command: pulumi stack rm << parameters.stack >> <<# parameters.force >>--force<</ parameters.force >> --cwd << parameters.working_directory >>
 
+  # stack output command
+  stack_output:
+    parameters:
+      stack:
+        type: string
+        description: "Name of the stack to operate on."
+      property_name:
+        type: string
+        description: "Property name of the stack output to set to the environment variable."
+      env_var:
+        type: string
+        description: "Name of the environment variable to set the output property's value to."
+      log_to_stderr:
+        type: boolean
+        description: "Log to stderr instead of to files. Default true."
+        default: true
+      working_directory:
+        type: string
+        description:
+            "The relative working directory to use, i.e. where your Pulumi.yaml is located."
+        default: "."
+    steps:
+      - run:
+          name: "pulumi stack output << parameters.property_name >> --stack << parameters.stack >>"
+          command: | 
+            OUTPUT_VALUE=$(pulumi stack output << parameters.property_name >> --stack << parameters.stack >> <<# parameters.log_to_stderr >>--logtostderr<</ parameters.log_to_stderr >> --cwd << parameters.working_directory >>)
+            echo 'export << parameters.env_var >>="${OUTPUT_VALUE}"' >> $BASH_ENV
+
   # preview command
   preview:
     parameters:
@@ -208,3 +236,32 @@ examples:
             - pulumi/update:
                 stack: robot-co/website-prod
                 working_directory: ~/repo/src/website/
+
+  review_app_example:
+    description:
+        "Creates a new Pulumi stack and deploys the source code built as part of the workflow, running
+        tests against it. When complete, tears down the stack and cleans up any cloud resources."
+    usage:
+      version: 2.1
+      orbs:
+        pulumi: pulumi/pulumi@1.0.0
+      jobs:
+        build:
+          docker:
+            - image: circleci/node:10
+          working_directory: ~/repo/
+          steps:
+              - checkout
+              - build # ?
+              - pulumi/login
+              - pulumi/stack_init:
+                  stack: robot-co/test-pr_<< include CircleCI job number? >>
+              - pulumi/stack_update
+              - pulumi/stack_output:
+                  stack: robot-co/test-pr_<< include CircleCI job number? >>
+                  property_name: awsLambdaUrl
+                  env_var: TEST_URL
+              - run_tests $TEST_URL
+              - pulumi/destroy
+              - pulumi/stack_rm:
+                  stack: robot-co/test-pr_<< include CircleCI job number? >>
