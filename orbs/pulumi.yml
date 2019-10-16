@@ -102,10 +102,10 @@ commands:
       env_var:
         type: string
         description: "Name of the environment variable to set the output property's value to."
-      log_to_stderr:
+      show_secrets:
         type: boolean
-        description: "Log to stderr instead of to files. Default true."
-        default: true
+        description: "Display stack outputs which are marked as secret in plaintext."
+        default: false
       working_directory:
         type: string
         description:
@@ -115,7 +115,7 @@ commands:
       - run:
           name: "pulumi stack output << parameters.property_name >> --stack << parameters.stack >>"
           command: | 
-            OUTPUT_VALUE=$(pulumi stack output << parameters.property_name >> --stack << parameters.stack >> <<# parameters.log_to_stderr >>--logtostderr<</ parameters.log_to_stderr >> --cwd << parameters.working_directory >>)
+            OUTPUT_VALUE=$(pulumi stack output << parameters.property_name >> --stack << parameters.stack >> <<# parameters.show_secrets >>--show-secrets<</ parameters.show_secrets >> --cwd << parameters.working_directory >>)
             echo 'export << parameters.env_var >>="${OUTPUT_VALUE}"' >> $BASH_ENV
 
   # preview command
@@ -252,16 +252,32 @@ examples:
           working_directory: ~/repo/
           steps:
               - checkout
-              - build # ?
+
+              # Install any dependencies and build the Pulumi program.
+              - build
+
+              # Create a new Pulumi stack specifically for testing the
+              # new infrastructure changes.
               - pulumi/login
+
+              # Create a new stack, specific to this CircleCI build,
+              # and deploy it.
               - pulumi/stack_init:
-                  stack: robot-co/test-pr_<< include CircleCI job number? >>
+                  stack: robot-co/test-pr_${CIRCLE_BUILD_NUM}
               - pulumi/stack_update
+
+              # Now that the stack has been created, retrieve one of its
+              # output properties. e.g. the URL it is running at.
               - pulumi/stack_output:
-                  stack: robot-co/test-pr_<< include CircleCI job number? >>
+                  stack: robot-co/test-pr_${CIRCLE_BUILD_NUM}
                   property_name: awsLambdaUrl
                   env_var: TEST_URL
+
+              # Run tests against the newly deployed Pulumi stack.
               - run_tests $TEST_URL
+
+              # After testing is complete, tear down the resources
+              # and delete the stack.
               - pulumi/destroy
               - pulumi/stack_rm:
-                  stack: robot-co/test-pr_<< include CircleCI job number? >>
+                  stack: robot-co/test-pr_${CIRCLE_BUILD_NUM}

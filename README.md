@@ -78,10 +78,10 @@ The `stack_output` sets a stack's output property to an environment variable.
 
 | Parameter         | type    | default     | description    |
 |-------------------|---------|-------------|----------------|
-| stack           | string  | (none)      | Name of the stack to remove. |
-| property_name           | string  | (none)      | Property name of the stack output to set to the environment variable. |
+| stack           | string  | (none)      | Name of the stack to read the output property from. |
+| property_name           | string  | (none)      | Name of the output property to read. |
 | env_var           | string  | (none)      | Name of the environment variable to set the output property's value to. |
-| log_to_stderr | boolean | true | Log to stderr instead of to files. | 
+| show_secrets | boolean | false | Display stack outputs which are marked as secret in plaintext. | 
 | working_directory | string | . | The relative working directory to run `pulumi` from. | 
 
 ### pulumi/preview
