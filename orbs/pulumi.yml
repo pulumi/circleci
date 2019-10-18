@@ -264,7 +264,8 @@ examples:
               # and deploy it.
               - pulumi/stack_init:
                   stack: robot-co/test-pr_${CIRCLE_BUILD_NUM}
-              - pulumi/stack_update
+              - pulumi/update
+                  stack: robot-co/test-pr_${CIRCLE_BUILD_NUM}
 
               # Now that the stack has been created, retrieve one of its
               # output properties. e.g. the URL it is running at.
