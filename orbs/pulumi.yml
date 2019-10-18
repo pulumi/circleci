@@ -116,7 +116,7 @@ commands:
           name: "pulumi stack output << parameters.property_name >> --stack << parameters.stack >>"
           command: | 
             OUTPUT_VALUE=$(pulumi stack output << parameters.property_name >> --stack << parameters.stack >> <<# parameters.show_secrets >>--show-secrets<</ parameters.show_secrets >> --cwd << parameters.working_directory >>)
-            echo 'export << parameters.env_var >>="${OUTPUT_VALUE}"' >> $BASH_ENV
+            echo "export << parameters.env_var >>=\"${OUTPUT_VALUE}\"" >> $BASH_ENV
 
   # preview command
   preview:
