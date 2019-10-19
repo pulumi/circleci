@@ -72,6 +72,18 @@ The `stack_rm` orb removes a stack and its configuration..
 | force | boolean | false | Whether or not to force deletion of the stack, leaving behind any resources managed by the stack. | 
 | working_directory | string | . | The relative working directory to run `pulumi` from. | 
 
+### pulumi/stack_output
+
+The `stack_output` sets a stack's output property to an environment variable.
+
+| Parameter         | type    | default     | description    |
+|-------------------|---------|-------------|----------------|
+| stack           | string  | (none)      | Name of the stack to read the output property from. |
+| property_name           | string  | (none)      | Name of the output property to read. |
+| env_var           | string  | (none)      | Name of the environment variable to set the output property's value to. |
+| show_secrets | boolean | false | Display stack outputs which are marked as secret in plaintext. | 
+| working_directory | string | . | The relative working directory to run `pulumi` from. | 
+
 ### pulumi/preview
 
 The `preview` orb performs a preview of the update to a given Pulumi stack.
