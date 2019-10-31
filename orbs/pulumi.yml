@@ -88,7 +88,7 @@ commands:
     steps:
       - run:
           name: "pulumi stack rm << parameters.stack >>"
-          command: pulumi stack rm << parameters.stack >> <<# parameters.force >>--force<</ parameters.force >> --cwd << parameters.working_directory >>
+          command: pulumi stack rm << parameters.stack >> --yes <<# parameters.force >>--force<</ parameters.force >> --cwd << parameters.working_directory >>
 
   # stack output command
   stack_output:
