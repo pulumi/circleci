@@ -10,7 +10,12 @@ description:
     The Pulumi Orbs for CircleCI enables you to use easily integrate Pulumi
     into your CircleCI workflows.
     
-    Repo: https://circleci.com/orbs/registry/orb/pulumi/pulumi"
+    Repo: https://circleci.com/orbs/registry/orb/pulumi/pulumi
+
+    Follow the instructions here to obtain the Pulumi Access Token:
+    https://www.pulumi.com/docs/intro/console/accounts-and-organizations/accounts/#access-tokens"
+
+    
 
 commands:
 
@@ -206,7 +211,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        pulumi: pulumi/pulumi@1.0.0
+        pulumi: pulumi/pulumi@x.y
       jobs:
         build:
           docker:
@@ -224,7 +229,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        pulumi: pulumi/pulumi@1.0.0
+        pulumi: pulumi/pulumi@x.y
       jobs:
         build:
           docker:
@@ -244,7 +249,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        pulumi: pulumi/pulumi@1.0.0
+        pulumi: pulumi/pulumi@x.y
       jobs:
         build:
           docker:
