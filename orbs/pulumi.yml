@@ -1,7 +1,7 @@
 version: 2.1
 
-description:
-    "Pulumi: Cloud Native Infrastructure as Code
+description: |
+    Pulumi: Cloud Native Infrastructure as Code
 
     Create, deploy, and manage cloud native applications and infrastructure
     in your favorite language, using an open source platform that enables
@@ -9,12 +9,13 @@ description:
     
     The Pulumi Orbs for CircleCI enables you to use easily integrate Pulumi
     into your CircleCI workflows.
-    
-    Repo: https://circleci.com/orbs/registry/orb/pulumi/pulumi
 
     Follow the instructions here to obtain the Pulumi Access Token:
-    https://www.pulumi.com/docs/intro/console/accounts-and-organizations/accounts/#access-tokens"
+    https://www.pulumi.com/docs/intro/console/accounts-and-organizations/accounts/#access-tokens
 
+display:
+    source_url: https://circleci.com/orbs/registry/orb/pulumi/pulumi
+    home_url: https://www.pulumi.com
     
 
 commands:
