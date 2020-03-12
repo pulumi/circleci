@@ -14,7 +14,7 @@ description: |
     https://www.pulumi.com/docs/intro/console/accounts-and-organizations/accounts/#access-tokens
 
 display:
-    source_url: https://circleci.com/orbs/registry/orb/pulumi/pulumi
+    source_url: https://github.com/pulumi/circleci
     home_url: https://www.pulumi.com
     
 
