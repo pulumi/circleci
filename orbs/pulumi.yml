@@ -158,7 +158,7 @@ commands:
     steps:
       - run: 
           name: "pulumi update --stack << parameters.stack >>"
-          command: pulumi update --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
+          command: pulumi update --yes --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
   # destroy command
   destroy:
@@ -178,7 +178,7 @@ commands:
     steps:
       - run: 
           name: "pulumi destroy --stack << parameters.stack >>"
-          command: pulumi destroy --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
+          command: pulumi destroy --yes --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
   # refresh command
   refresh:
@@ -202,7 +202,7 @@ commands:
     steps:
       - run: 
           name: "pulumi refresh --stack << parameters.stack >>"
-          command: pulumi refresh --stack << parameters.stack >> <<# parameters.expect_no_changes >>--expect-no-changes<</ parameters.expect_no_changes >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
+          command: pulumi refresh --yes --stack << parameters.stack >> <<# parameters.expect_no_changes >>--expect-no-changes<</ parameters.expect_no_changes >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
 examples:
   login_example:
