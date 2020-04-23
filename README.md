@@ -7,14 +7,14 @@ scripts.
 
 ## Usage
 
-To use these orbs, simply include the `pulumi/pulumi@1.2.0` orbs package, and
+To use these orbs, simply include the `pulumi/pulumi@2.0.0` orbs package, and
 then call the orb commands like `pulumi/login` or `pulumi/update` from your
 CircleCI configuration file.
 
 ```yaml
 version: 2.1
 orbs:
-  pulumi: pulumi/pulumi@1.2.0
+  pulumi: pulumi/pulumi@2.0.0
 jobs:
   build:
     docker:
