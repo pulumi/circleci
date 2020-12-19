@@ -6,7 +6,7 @@ description: |
     Create, deploy, and manage cloud native applications and infrastructure
     in your favorite language, using an open source platform that enables
     sharing, reuse, and safe and predictable changes in a team environment.
-    
+
     The Pulumi Orbs for CircleCI enables you to use easily integrate Pulumi
     into your CircleCI workflows.
 
@@ -16,7 +16,7 @@ description: |
 display:
     source_url: https://github.com/pulumi/circleci
     home_url: https://www.pulumi.com
-    
+
 
 commands:
 
@@ -39,7 +39,7 @@ commands:
           set the environment variable and not need to declare a value in config."
         default: "${PULUMI_ACCESS_TOKEN}"
     steps:
-      - run: 
+      - run:
           name: "Install Pulumi CLI, if needed"
           command: |
               if [ << parameters.version >> == "latest" ]; then
@@ -74,7 +74,12 @@ commands:
     steps:
       - run:
           name: "pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >>"
-          command: pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >>
+          command: |
+              pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >> ||
+              (
+                echo "pulumi stack init failed: trying pulumi stack select" &&
+                pulumi stack select --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >>
+              )
 
   # stack rm command
   stack_rm:
@@ -120,7 +125,7 @@ commands:
     steps:
       - run:
           name: "pulumi stack output << parameters.property_name >> --stack << parameters.stack >>"
-          command: | 
+          command: |
             OUTPUT_VALUE=$(pulumi stack output << parameters.property_name >> --stack << parameters.stack >> <<# parameters.show_secrets >>--show-secrets<</ parameters.show_secrets >> --cwd << parameters.working_directory >>)
             echo "export << parameters.env_var >>=\"${OUTPUT_VALUE}\"" >> $BASH_ENV
 
@@ -156,7 +161,7 @@ commands:
         description: "Do not perform a preview before performing the update."
         default: false
     steps:
-      - run: 
+      - run:
           name: "pulumi update --stack << parameters.stack >>"
           command: pulumi update --yes --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
@@ -176,7 +181,7 @@ commands:
         description: "Do not perform a preview before performing the destroy."
         default: false
     steps:
-      - run: 
+      - run:
           name: "pulumi destroy --stack << parameters.stack >>"
           command: pulumi destroy --yes --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
@@ -200,7 +205,7 @@ commands:
         description: "Do not perform a preview before performing the refresh."
         default: false
     steps:
-      - run: 
+      - run:
           name: "pulumi refresh --stack << parameters.stack >>"
           command: pulumi refresh --yes --stack << parameters.stack >> <<# parameters.expect_no_changes >>--expect-no-changes<</ parameters.expect_no_changes >> --cwd << parameters.working_directory >> <<# parameters.skip-preview >>--skip-preview<</ parameters.skip-preview >>
 
