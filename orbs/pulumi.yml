@@ -135,10 +135,14 @@ commands:
         description:
             "The relative working directory to use, i.e. where your Pulumi.yaml is located."
         default: "."
+      suppress_permalink:
+        type: boolean
+        description: "Suppress display of the state permalink."
+        default: false
     steps:
       - run:
           name: "pulumi preview --stack << parameters.stack >>"
-          command: pulumi preview --stack << parameters.stack >> --cwd << parameters.working_directory >>
+          command: pulumi preview --stack << parameters.stack >> --cwd << parameters.working_directory >> <<# parameters.suppress_permalink >>--suppress-permalink<</ parameters.suppress_permalink >>
 
   # update command
   update:

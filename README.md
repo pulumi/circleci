@@ -96,6 +96,7 @@ The `preview` orb performs a preview of the update to a given Pulumi stack.
 |-------------------|---------|-------------|----------------|
 | stack           | string  | (none)      | Name of the Pulumi stack to preview. |
 | working_directory | string | . | The relative working directory to run `pulumi` from. | 
+| suppress_permalink | boolean | false | Suppress display of the state permalink. |
 
 ### pulumi/update
 
