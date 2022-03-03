@@ -71,10 +71,18 @@ commands:
         description:
             "The relative working directory to use, i.e. where your Pulumi.yaml is located."
         default: "."
+      copy:
+        type: boolean
+        description: "Copies config from an existing stack (default false)"
+        default: false
+      stack_config_copy:
+        type: string
+        description: "The stack name to copy from"
+        default: ""
     steps:
       - run:
           name: "pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >>"
-          command: pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >>
+          command: pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >> <<# parameters.copy >>--copy-config-from << parameters.stack_config_copy >><</ parameters.copy >>
 
   # stack rm command
   stack_rm:
