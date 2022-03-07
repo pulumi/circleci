@@ -61,7 +61,7 @@ parameter.
 | stack           | string  | (none)      | Name of the stack to initialize. |
 | secrets_provider | string  | default      | The type of the provider that should be used to encrypt and decrypt secrets (possible choices: default, passphrase, awskms, azurekeyvault, gcpkms, hashivault). |
 | working_directory | string | . | The relative working directory to run `pulumi` from. | 
-| copy | string | (none) | The stack name from which to copy an existing stack's configuration
+| copy | string | "" | The stack name from which to copy an existing stack's configuration
 
 ### pulumi/stack_rm
 
