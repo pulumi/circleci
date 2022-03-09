@@ -73,7 +73,7 @@ commands:
         default: "."
       copy:
         type: string
-        description: "The stack name from which to copy an existing stack's configuration (default "")"
+        description: "The stack name from which to copy an existing stack's configuration (default '')"
         default: ""
     steps:
       - run:
