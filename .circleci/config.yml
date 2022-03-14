@@ -27,7 +27,7 @@ commands:
 jobs:
   validate-orbs:
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:lts
     working_directory: ~/repo
     steps:
       - checkout
@@ -39,7 +39,7 @@ jobs:
 
   test-login:
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:lts
     working_directory: ~/repo
     steps:
       - checkout
@@ -49,7 +49,7 @@ jobs:
 
   test-preview:
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:lts
     working_directory: ~/repo/
     steps:
       - checkout
@@ -63,7 +63,7 @@ jobs:
 
   test-update:
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:lts
     working_directory: ~/repo/
     steps:
       - checkout
