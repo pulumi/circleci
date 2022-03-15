@@ -2,7 +2,6 @@
     "name": "tests",
     "main": "index.js",
     "dependencies": {
-        "lodash": "^4.17.21",
         "@pulumi/pulumi": "latest"
     }
 }
