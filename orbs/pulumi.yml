@@ -42,6 +42,16 @@ commands:
       - run: 
           name: "Install Pulumi CLI, if needed"
           command: |
+              # Check if Pulumi CLI is already installed with specified version
+              if command -v pulumi &> /dev/null; then
+                  INSTALLED_VERSION=$(pulumi version | cut -d 'v' -f2)
+                  if [ "<< parameters.version >>" == "latest" ] || [ "$INSTALLED_VERSION" == "<< parameters.version >>" ]; then
+                      echo "Pulumi CLI v$INSTALLED_VERSION is already installed, skipping installation."
+                      exit 0
+                  else
+                      echo "Pulumi CLI v$INSTALLED_VERSION is installed, but version << parameters.version >> was requested. Updating..."
+                  fi
+              fi
               if [ << parameters.version >> == "latest" ]; then
                 curl -L https://get.pulumi.com/ | bash -s
               else
