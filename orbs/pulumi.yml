@@ -42,22 +42,36 @@ commands:
       - run: 
           name: "Install Pulumi CLI, if needed"
           command: |
-              # Check if Pulumi CLI is already installed with specified version
-              if command -v pulumi &> /dev/null; then
-                  INSTALLED_VERSION=$(pulumi version | cut -d 'v' -f2)
-                  if [ "<< parameters.version >>" == "latest" ] || [ "$INSTALLED_VERSION" == "<< parameters.version >>" ]; then
-                      echo "Pulumi CLI v$INSTALLED_VERSION is already installed, skipping installation."
-                      exit 0
-                  else
-                      echo "Pulumi CLI v$INSTALLED_VERSION is installed, but version << parameters.version >> was requested. Updating..."
-                  fi
+              PARAM_VERSION="<< parameters.version >>"
+
+              if command -v pulumi > /dev/null; then
+                # Strip 'v' prefix if present (e.g., v3.101.0 -> 3.101.0)
+                INSTALLED_VERSION=$(pulumi version | tr -d 'v')
+                echo "Found installed Pulumi version: $INSTALLED_VERSION"
+
+                # Determine the target version for comparison
+                if [ "$PARAM_VERSION" == "latest" ]; then
+                  TARGET_VERSION=$(curl -s https://www.pulumi.com/latest-version)
+                  echo "Latest available version is: $TARGET_VERSION"
+                else
+                  TARGET_VERSION="$PARAM_VERSION"
+                fi
+
+                # Compare and exit if they match
+                if [ "$INSTALLED_VERSION" == "$TARGET_VERSION" ]; then
+                  echo "Pulumi $INSTALLED_VERSION is already installed and matches requested version. Skipping install."
+                  exit 0
+                else
+                  echo "Version mismatch (Installed: $INSTALLED_VERSION, Requested: $TARGET_VERSION). Proceeding with installation."
+                fi
               fi
-              if [ << parameters.version >> == "latest" ]; then
+
+              if [ "$PARAM_VERSION" == "latest" ]; then
                 curl -L https://get.pulumi.com/ | bash -s
               else
-                curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
+                curl -L https://get.pulumi.com/ | bash -s -- --version "$PARAM_VERSION"
               fi
-              # Add to PATH
+
               echo 'export PATH=${HOME}/.pulumi/bin:$PATH' >> $BASH_ENV
               source $BASH_ENV
       - run:
