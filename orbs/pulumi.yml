@@ -61,6 +61,10 @@ commands:
                 if [ "$INSTALLED_VERSION" == "$TARGET_VERSION" ]; then
                   echo "Pulumi $INSTALLED_VERSION is already installed and matches requested version. Skipping install."
                   exit 0
+                elif [ -z $TARGET_VERSION ]; then
+                    # Pulumi is already installed, and the user didn't override the version. Just continue using what is installed
+                    echo "Using Pulumi $INSTALLED_VERSION"
+                    exit 0
                 else
                   echo "Version mismatch (Installed: $INSTALLED_VERSION, Requested: $TARGET_VERSION). Proceeding with installation."
                 fi
