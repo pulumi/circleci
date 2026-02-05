@@ -8,7 +8,8 @@ scripts.
 ## Usage
 
 To use these orbs, simply include the `pulumi/pulumi@2.0.0` orbs package, and
-then call the orb commands like `pulumi/login` or `pulumi/update` from your
+then call the `pulumi/install` orb command to install pulumi; allowing you to use
+additional commands like `pulumi/login` or `pulumi/update` from your
 CircleCI configuration file.
 
 ```yaml
@@ -22,6 +23,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - pulumi/install
       - pulumi/login
       - run:
           command: |
@@ -33,18 +35,28 @@ jobs:
 
 ## Orb Reference
 
-### pulumi/login
+### pulumi/install
 
-The `login` orb downloads the Pulumi CLI and authenticates with the Pulumi
-service.
+The `install` orb downloads and installs the Pulumi CLI to the latest version unless 
+otherwise specified.
 
-> It is recommended to omit the `version` and `access-token` parameters, and
-> instead download the latest Pulumi CLI and provide the access token via a
-> secure environment variable named `PULUMI_ACCESS_TOKEN`.
+> It is recommended to omit the `version` parameters, and
+> instead download the latest Pulumi CLI version.
 
 | Parameter         | type    | default     | description    |
 |-------------------|---------|-------------|----------------|
 | version           | string  | latest      | Version of the Pulumi CLI to install. |
+
+### pulumi/login
+
+The `login` orb authenticates with the Pulumi service.
+
+> It is recommended to omit the `access-token` parameter, and
+> instead provide the access token via a secure environment 
+> variable named `PULUMI_ACCESS_TOKEN`.
+
+| Parameter         | type    | default     | description    |
+|-------------------|---------|-------------|----------------|
 | cloud-url         | string  | https://api.pulumi.com | URL of the Pulumi service to log into. |
 | access-token      | string  | ${PULUMI_ACCESS_TOKEN} | The access token to use to log in. |
 
