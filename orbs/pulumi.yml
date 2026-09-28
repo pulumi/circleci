@@ -38,6 +38,23 @@ commands:
           "The access token to use, defaulting to `$PULUMI_ACCESS_TOKEN` so you can
           set the environment variable and not need to declare a value in config."
         default: "${PULUMI_ACCESS_TOKEN}"
+      oidc-organization:
+        type: string
+        description:
+          "Pulumi organization to log into using OIDC. When set, OIDC is used instead of the access token."
+        default: ""
+      oidc-team:
+        type: string
+        description: "Pulumi team to request a team token for. Leave empty for an organization token."
+        default: ""
+      oidc-user:
+        type: string
+        description: "Pulumi user to request a personal token for. Leave empty for an organization token."
+        default: ""
+      oidc-expiration:
+        type: string
+        description: "Lifetime of the Pulumi access token, e.g. '30m' or '2h'."
+        default: "1h"
     steps:
       - run: 
           name: "Install Pulumi CLI, if needed"
@@ -78,11 +95,28 @@ commands:
 
               echo 'export PATH=${HOME}/.pulumi/bin:$PATH' >> $BASH_ENV
               source $BASH_ENV
-      - run:
-          name: "Log into Pulumi"
-          command: |
-            export PULUMI_ACCESS_TOKEN="<< parameters.access-token >>"
-            pulumi login --cloud-url << parameters.cloud-url >>
+      - unless:
+          condition: << parameters.oidc-organization >>
+          steps:
+            - run:
+                name: "Log into Pulumi"
+                command: |
+                  export PULUMI_ACCESS_TOKEN="<< parameters.access-token >>"
+                  pulumi login --cloud-url << parameters.cloud-url >>
+      - when:
+          condition: << parameters.oidc-organization >>
+          steps:
+            - run:
+                name: "Log into Pulumi with OIDC"
+                command: |
+                  unset PULUMI_ACCESS_TOKEN
+                  token=$(circleci run oidc get --claims '{"aud":"urn:pulumi:org:<< parameters.oidc-organization >>"}')
+                  pulumi login --cloud-url << parameters.cloud-url >> \
+                    --oidc-token "$token" \
+                    --oidc-org "<< parameters.oidc-organization >>" \
+                    <<# parameters.oidc-team >>--oidc-team "<< parameters.oidc-team >>"<</ parameters.oidc-team >> \
+                    <<# parameters.oidc-user >>--oidc-user "<< parameters.oidc-user >>"<</ parameters.oidc-user >> \
+                    --oidc-expiration "<< parameters.oidc-expiration >>"
 
   # stack init command
   stack_init:
@@ -254,6 +288,21 @@ examples:
             - pulumi/login:
                 version: "16.0.2"
                 access-token: ${OTHER_ACCESS_TOKEN}
+
+  login_oidc_example:
+    description:
+        "Using the pulumi/login orb with CircleCI OIDC, so no Pulumi access token needs to be stored."
+    usage:
+      version: 2.1
+      orbs:
+        pulumi: pulumi/pulumi@x.y
+      jobs:
+        build:
+          docker:
+            - image: cimg/node:lts
+          steps:
+            - pulumi/login:
+                oidc-organization: robot-co
 
   update_example:
     description:

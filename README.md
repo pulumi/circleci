@@ -47,6 +47,22 @@ service.
 | version           | string  | latest      | Version of the Pulumi CLI to install. |
 | cloud-url         | string  | https://api.pulumi.com | URL of the Pulumi service to log into. |
 | access-token      | string  | ${PULUMI_ACCESS_TOKEN} | The access token to use to log in. |
+| oidc-organization | string  | ""          | Pulumi organization to log into using OIDC. When set, OIDC is used instead of `access-token`. |
+| oidc-team         | string  | ""          | Pulumi team to request a team token for. |
+| oidc-user         | string  | ""          | Pulumi user to request a personal token for. |
+| oidc-expiration   | string  | 1h          | Lifetime of the Pulumi access token. |
+
+#### Logging in with OIDC
+
+Register CircleCI as an OIDC issuer in your Pulumi organization
+(issuer `https://oidc.circleci.com/org/<circleci-org-id>`, audience
+`urn:pulumi:org:<pulumi-org>`), then:
+
+```yaml
+steps:
+  - pulumi/login:
+      oidc-organization: robot-co
+```
 
 ### pulumi/stack_init
 
